@@ -1,0 +1,42 @@
+# Environment
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+screenshots/
+*.png
+*.jpg
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright
+.playwright/
+
+# Development folder (debug scripts, tests)
+dev/
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+.zig-cache/
+
+# Media files
+media/

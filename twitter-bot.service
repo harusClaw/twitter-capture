@@ -1,0 +1,36 @@
+[Unit]
+Description=Twitter URL to Image Telegram Bot
+Documentation=https://github.com/yourusername/twitter-capture
+After=network.target
+
+[Service]
+Type=simple
+User=openclaw
+Group=openclaw
+WorkingDirectory=/home/openclaw/.nanobot/workspace/projects/twitter-capture
+
+# Environment setup
+Environment="PATH=/home/openclaw/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+# IMPORTANT: Replace with your actual token or use EnvironmentFile
+# Environment="TELEGRAM_BOT_TOKEN=your_bot_token_here"
+EnvironmentFile=-/home/openclaw/.nanobot/workspace/projects/twitter-capture/.env
+
+# Execution
+ExecStart=/home/openclaw/.local/bin/uv run python src/bot.py
+Restart=always
+RestartSec=10
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/openclaw/.nanobot/workspace/projects/twitter-capture
+PrivateTmp=true
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=twitter-capture-bot
+
+[Install]
+WantedBy=multi-user.target

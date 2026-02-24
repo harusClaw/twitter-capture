@@ -1,252 +1,134 @@
-# Twitter Media Extractor 🐦📸
+# Twitter Capture 🐦📸
 
-A Telegram bot that extracts and sends images, videos, and GIFs from Twitter/X URLs.
+A Telegram bot that extracts images, videos, and GIFs from Twitter/X URLs and sends them as native Telegram media.
 
 ## ✨ Features
 
-- 🖼️ **Extract Images** - Get all images from tweets (up to 4)
-- 🎬 **Extract Videos** - Download and send native videos
-- 🎨 **GIF Support** - Animated GIFs sent as playable videos
-- 📱 **Native Telegram Messages** - Media sent as photos/videos, not documents
-- 🎯 **Album Support** - Multiple images sent as swipeable albums
-- 📝 **Tweet Text** - Includes tweet content, username, and timestamp
-- 🔒 **No Login Required** - Uses fixupx.com to bypass Twitter walls
-- ⚡ **Fast & Lightweight** - Built with Playwright and python-telegram-bot
+- 🖼️ **Images** - Extract all images from tweets (up to 4)
+- 🎬 **Videos** - Download and send native videos
+- 🎨 **GIFs** - Animated GIFs sent as playable videos
+- 📱 **Native Media** - Sent as photos/videos, not documents
+- 🎯 **Albums** - Multiple images as swipeable albums
+- 📝 **Tweet Context** - Includes username, text, and timestamp
+- 🔒 **No Login** - Uses fixupx.com to bypass Twitter walls
+- ⚡ **Fast** - Built with Playwright and python-telegram-bot
 
 ## 🚀 Quick Start
 
 ### 1. Install Dependencies
 
 ```bash
-# Install Playwright browser
+uv sync
 uv run playwright install chromium
-
-# Install system dependencies (if needed)
-uv run playwright install-deps chromium
 ```
 
-### 2. Get Telegram Bot Token
+### 2. Configure Bot Token
 
-1. Open Telegram and search for `@BotFather`
-2. Send `/newbot` command
-3. Follow instructions to create your bot
-4. Copy the bot token
-
-### 3. Configure Environment
-
-Create a `.env` file:
+Create a `.env` file with your Telegram bot token:
 
 ```bash
-echo "TELEGRAM_BOT_TOKEN=your_bot_token_here" > .env
+echo "TELEGRAM_BOT_TOKEN=your_token_here" > .env
 ```
 
-Or export as environment variable:
+Get a token from [@BotFather](https://t.me/BotFather) on Telegram.
+
+### 3. Run the Bot
 
 ```bash
-export TELEGRAM_BOT_TOKEN="your_bot_token_here"
+uv run python -m twitter_capture
 ```
 
-### 4. Run the Bot
+### 4. Use in Telegram
 
-```bash
-uv run python src/bot.py
-```
-
-### 5. Use in Telegram
-
-- Start a chat with your bot
-- Send any Twitter/X URL
-- Receive all media from the tweet!
-
-**Example URLs:**
-- `https://twitter.com/username/status/123456`
-- `https://x.com/username/status/123456`
+Send any Twitter/X URL to your bot:
+- `https://twitter.com/user/status/123`
+- `https://x.com/user/status/123`
 
 ## 📖 Commands
 
 | Command | Description |
 |---------|-------------|
-| `/start` | Start the bot and show welcome message |
-| `/help` | Show help and usage instructions |
-| `/ping` | Check if bot is alive |
+| `/start` | Welcome message |
+| `/help` | Usage instructions |
+| `/ping` | Check bot status |
 
-## 🏗️ Project Structure
+## 🏗️ Structure
 
 ```
 twitter-capture/
-├── src/
-│   ├── bot.py              # Main bot application
-│   └── media_extractor.py  # Alternative simpler bot
-├── dev/                    # Development and debug scripts
-├── .env                    # Environment variables (gitignored)
-├── .env.example            # Example environment file
-├── pyproject.toml          # Project configuration
-├── uv.lock                 # Dependency lock file
-├── telegram_bot.service    # Systemd service template
-├── quickstart.sh           # Quick setup script
-├── LICENSE                 # MIT License
-└── README.md               # This file
+├── src/twitter_capture/
+│   ├── __init__.py      # Package info
+│   ├── __main__.py      # Entry point
+│   ├── bot.py           # Telegram bot
+│   └── extractor.py     # Media extraction
+├── .env.example         # Environment template
+├── pyproject.toml       # Project config
+├── twitter-bot.service  # Systemd template
+└── README.md
 ```
 
 ## 🔧 Systemd Service (Optional)
 
-Run the bot as a background service:
-
-### 1. Create Service File
+Run as a background service:
 
 ```bash
-cp telegram_bot.service ~/.config/systemd/user/
-```
+# Copy service file
+cp twitter-bot.service ~/.config/systemd/user/
 
-### 2. Edit Configuration
-
-Edit the service file and set your bot token:
-
-```bash
-nano ~/.config/systemd/user/telegram_bot.service
-```
-
-### 3. Enable and Start
-
-```bash
+# Edit and set your token, then:
 systemctl --user daemon-reload
-systemctl --user enable telegram_bot.service
-systemctl --user start telegram_bot.service
+systemctl --user enable --now twitter-bot.service
 
 # Check status
-systemctl --user status telegram_bot.service
-
-# View logs
-journalctl --user -u telegram_bot.service -f
+systemctl --user status twitter-bot.service
 ```
 
 ## 🛠️ Development
 
-### Debug Scripts
-
-The `dev/` folder contains various debug and test scripts:
-
-- `debug_*.py` - Media extraction debugging
-- `test_*.py` - Feature testing scripts
-
-### Run in Development Mode
+### Run in Debug Mode
 
 ```bash
-# Enable debug logging
 export PYTHONDEBUG=1
-uv run python src/bot.py
+uv run python -m twitter_capture
 ```
 
-### Add New Features
+### Key Files
 
-The main bot logic is in `src/bot.py`. Key functions:
-
-- `extract_tweet_data()` - Extracts tweet content using Playwright
-- `handle_twitter_url()` - Processes incoming Twitter URLs
-- `download_file()` - Downloads media files
-
-## 📋 Requirements
-
-- Python 3.10+
-- uv (Python package manager)
-- Playwright (Chromium browser)
-- Telegram Bot Token
-- Internet connection
-
-## 🔒 Security Notes
-
-- ⚠️ **Never commit your bot token** to version control
-- ✅ Use environment variables or `.env` files
-- ✅ The `.env` file is gitignored by default
-- ✅ Run with minimal privileges
+- `bot.py` - Main bot logic and Telegram handlers
+- `extractor.py` - Playwright-based tweet extraction
 
 ## 🐛 Troubleshooting
 
-### Browser Installation Fails
-
+**Browser installation fails:**
 ```bash
-# Install system dependencies
-sudo apt-get update
-sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 \
-    libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
-    libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
-    libgbm1 libasound2 libpango-1.0-0 libcairo2
-
-# Reinstall browsers
-uv run playwright install chromium
+uv run playwright install-deps chromium
 ```
 
-### Bot Doesn't Respond
+**Bot doesn't respond:**
+- Check logs: `journalctl --user -u twitter-bot -f`
+- Verify token is correct
+- Ensure Twitter account is public
 
-1. Check if bot is running: `ps aux | grep bot.py`
-2. Check logs: `journalctl --user -u telegram_bot.service -f`
-3. Verify token is correct
-4. Ensure the Twitter account is public (not private)
+**"No media found":**
+- Tweet may be private or deleted
+- Some tweets are text-only
 
-### "No media found" Error
+## 🔒 Security
 
-- Tweet might be from a private account
-- Tweet might have been deleted
-- Network issues - try again
-- Some tweets only have text (no media)
-
-### Timeout Errors
-
-- Increase timeout in `extract_tweet_data()`
-- Check network connectivity
-- Twitter API might be rate-limited
-
-## 📝 How It Works
-
-1. User sends a Twitter/X URL to the bot
-2. Bot navigates to fixupx.com (Twitter embed service)
-3. Playwright extracts media URLs from the page
-4. Bot downloads images/videos
-5. Media sent to user as native Telegram messages
-
-## 🌟 Examples
-
-### Single Image Tweet
-```
-Input: https://x.com/artist/status/123456
-Output: 📷 Image sent as photo + tweet text
-```
-
-### Multiple Images (Album)
-```
-Input: https://x.com/photographer/status/789012
-Output: 📸 4 images sent as swipeable album
-```
-
-### Video Tweet
-```
-Input: https://x.com/creator/status/345678
-Output: 🎬 Video sent as native Telegram video
-```
-
-### GIF Tweet
-```
-Input: https://x.com/animator/status/901234
-Output: 🎨 GIF sent as playable video
-```
+- ⚠️ Never commit `.env` with your bot token
+- ✅ Token is gitignored by default
+- ✅ Run with minimal privileges
 
 ## 📄 License
 
-MIT License - Feel free to modify and distribute!
+MIT License - See [LICENSE](LICENSE)
 
-## 🙏 Acknowledgments
+## 🙏 Credits
 
 - [fixupx.com](https://fixupx.com) - Twitter embed service
 - [Playwright](https://playwright.dev) - Browser automation
-- [python-telegram-bot](https://python-telegram-bot.org) - Telegram Bot API
-
-## 📞 Support
-
-For issues or questions:
-1. Check the troubleshooting section
-2. Review Playwright documentation
-3. Check Telegram Bot API docs
+- [python-telegram-bot](https://python-telegram-bot.org) - Bot framework
 
 ---
 
-**Enjoy extracting Twitter media!** 🐦🎨
+**Made by harus_claw** 🐾

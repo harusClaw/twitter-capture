@@ -1,9 +1,16 @@
 # Environment
 .env
 .venv/
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
+*.egg-info/
+
+# Build
+dist/
+build/
 
 # IDE
 .vscode/
@@ -11,32 +18,28 @@ __pycache__/
 *.swp
 *.swo
 
-# Temporary files
-*.tmp
-*.temp
-screenshots/
-*.png
-*.jpg
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Playwright
+.playwright/
 
 # Logs
 *.log
-logs/
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Playwright
-.playwright/
-
-# Development folder (debug scripts, tests)
-dev/
-
-# Build artifacts
-*.egg-info/
-dist/
-build/
-.zig-cache/
-
-# Media files
+# Media (local testing)
 media/
+screenshots/
+
+# Backup
+*.bak
+*.tmp
+
+# Development
+dev/
